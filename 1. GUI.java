@@ -13,10 +13,45 @@ public class GUI {
         frame.setLayout(null);
 
         // 1. قسم اسم المستخدم (مكانه في الأعلى)
-        JTextField field = new JTextField();
-        field.setBounds(180, 55, 200, 32);
+        JTextField field = new JTextField() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+
+                g2.setRenderingHint(
+                        RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON
+                );
+
+                g2.setColor(new Color(82, 181, 243));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 18, 18);
+
+                super.paintComponent(g2);
+                g2.dispose();
+            }
+
+            @Override
+            protected void paintBorder(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+
+                g2.setRenderingHint(
+                        RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON
+                );
+
+                g2.setColor(new Color(10, 56, 232));
+                g2.setStroke(new BasicStroke(3));
+                g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 18, 18);
+
+                g2.dispose();
+            }
+        };
+
+        field.setBounds(180, 55, 200, 35);
         field.setFont(new Font("Arial", Font.BOLD, 16));
         field.setHorizontalAlignment(JTextField.CENTER);
+        field.setForeground(Color.BLACK);
+        field.setOpaque(false);
 
         JLabel label = new JLabel("اسم المستخدم :");
         label.setBounds(385, 55, 120, 32);
@@ -25,19 +60,35 @@ public class GUI {
 
         // 2. شاشة عرض الشخصية (تم تنزيلها إلى Y = 140 لترك مسافة واضحة)
         JPanel characterPanel = new JPanel() {
-            @Override
+            { setOpaque(false); }            @Override
             protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
+
+                Graphics2D g2 = (Graphics2D) g.create();
+
+                g2.setRenderingHint(
+                        RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON
+                );
+
+                // الشاشة البيضاء بحواف دائرية
+                g2.setColor(Color.WHITE);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 35, 35);
+
+                // نخلي الشخصية داخل الحواف الدائرية
+                g2.setClip(new java.awt.geom.RoundRectangle2D.Double(
+                        0, 0, getWidth(), getHeight(), 35, 35
+                ));
 
                 File skinFile = new File(character.SKINS[character.currentSkin]);
                 if (skinFile.exists()) {
                     ImageIcon skinIcon = new ImageIcon(character.SKINS[character.currentSkin]);
-                    g.drawImage(skinIcon.getImage(), 0, 0, 280, 280, this);
+                    g2.drawImage(skinIcon.getImage(), 0, 0, 280, 280, this);
                 }
+
                 File eyeFile = new File(character.EYES_COLORS[character.currentEyes]);
                 if (eyeFile.exists()) {
                     ImageIcon eyeIcon = new ImageIcon(character.EYES_COLORS[character.currentEyes]);
-                    g.drawImage(eyeIcon.getImage(), 0, 0, 280, 280, this);
+                    g2.drawImage(eyeIcon.getImage(), 0, 0, 280, 280, this);
                 }
 
                 String hairImagePath = "";
@@ -51,7 +102,7 @@ public class GUI {
                     File hairFile = new File(hairImagePath);
                     if (hairFile.exists()) {
                         ImageIcon hairIcon = new ImageIcon(hairImagePath);
-                        g.drawImage(hairIcon.getImage(), 0, 0, 280, 280, this);
+                        g2.drawImage(hairIcon.getImage(), 0, 0, 280, 280, this);
                     }
                 }
 
@@ -70,13 +121,32 @@ public class GUI {
                     File outfitFile = new File(outfitImagePath);
                     if (outfitFile.exists()) {
                         ImageIcon outfitIcon = new ImageIcon(outfitImagePath);
-                        g.drawImage(outfitIcon.getImage(), 0, 0, 280, 280, this);
+                        g2.drawImage(outfitIcon.getImage(), 0, 0, 280, 280, this);
                     }
                 }
+
+                // الحواف الوردية
+                g2.setClip(null);
+
+                g2.setColor(new Color(210, 57, 160));
+                g2.setStroke(new BasicStroke(
+                        5,
+                        BasicStroke.CAP_ROUND,
+                        BasicStroke.JOIN_ROUND
+                ));
+
+                g2.drawRoundRect(
+                        2, 2,
+                        getWidth() - 5,
+                        getHeight() - 5,
+                        35, 35
+                );
+
+                g2.dispose();
             }
         };
-        characterPanel.setBounds(330, 140, 280, 280);
 
+        characterPanel.setBounds(330, 140, 280, 280);
         // 3. قسم البشرة (تم تنزيله إلى Y = 145)
         SkinSelector skinSelector = new SkinSelector(character, characterPanel);
         skinSelector.setBounds(30, 145, 190, 30);
@@ -124,12 +194,49 @@ public class GUI {
         frame.add(outfitColorLabel);
 
         // 7. زر العشوائي (تحت شاشة العرض مباشرة عند Y = 440)
-        JButton randomBtn = new JButton("عشوائي 🎲");
+        JButton randomBtn = new JButton("عشوائي 🎲") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+
+                g2.setRenderingHint(
+                        RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON
+                );
+
+                // اللون الداخلي الوردي
+                g2.setColor(new Color(82, 181, 243));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 18, 18);
+
+                super.paintComponent(g2);
+                g2.dispose();
+            }
+
+            @Override
+            protected void paintBorder(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+
+                g2.setRenderingHint(
+                        RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON
+                );
+
+                // الحواف البنفسجية
+                g2.setColor(new Color(10, 56, 232));
+                g2.setStroke(new BasicStroke(3));
+                g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 18, 18);
+
+                g2.dispose();
+            }
+        };
+
         randomBtn.setBounds(465, 440, 140, 36);
         randomBtn.setFont(new Font("Arial", Font.BOLD, 18));
-        randomBtn.setBackground(new Color(230, 240, 255));
         randomBtn.setForeground(Color.BLACK);
         randomBtn.setFocusPainted(false);
+        randomBtn.setBorderPainted(true);
+        randomBtn.setContentAreaFilled(false);
+        randomBtn.setOpaque(false);
         randomBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         randomBtn.addActionListener(e -> {
