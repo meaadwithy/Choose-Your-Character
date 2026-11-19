@@ -9,7 +9,7 @@ The character is built dynamically by layering different visual assets together,
 
  📸
 <p align="center">
-  <img width="762" height="712" alt="Choose Your Character game preview" src="https://github.com/user-attachments/assets/4a75361e-5837-4865-9d8d-86a5b74ae393" />
+ <img width="762" height="712" alt="Screenshot 1448-06-09 at 7 36 52 PM" src="https://github.com/user-attachments/assets/27c4960f-dcc7-4c41-ab3a-780f3545a3f5" />
 </p>
 
 ![Game Preview](assets/preview.gif)
